@@ -3,8 +3,10 @@ from bs4 import BeautifulSoup as bs
 from urllib.parse import urljoin
 import os.path
 from os import path
+from colorama import Fore
 
-url = "http://www.jbm.com.tr"
+print("Example Url : https://www.google.com")
+url = input("Enter site url  : ")
 
 session = requests.Session()
 session.headers["User-Agent"] = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (HTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36"
@@ -72,3 +74,8 @@ for file in css_files:
 f = open("./site_content/index.html", "a")
 f.write(str(soup))
 f.close()
+
+print(Fore.GREEN + "Site exported successfully")
+print("HTML File : site_content/index.html")
+print("Js Assets : site_content/assets/js")
+print("Css Assets : site_content/assets/css")
