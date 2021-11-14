@@ -25,8 +25,6 @@ for css in soup.find_all("link"):
         css_files.append(css_url)
         css['href'] = "assets/css/" + css_url.split("/")[-1]
 
-# Open Folders
-
 if not path.exists("site_content"):
     os.mkdir("site_content")
 
@@ -39,14 +37,13 @@ if not path.exists("site_content/assets/js"):
 if not path.exists("site_content/assets/css"):
     os.mkdir("site_content/assets/css")
 
-html = html.decode("utf-8")  # Convert to string
+html = html.decode("utf-8")
 
-# Add Files To Folder
 for file in script_files:
     request = session.get(file)
     file_domain = file.split("/")[2]
     request_domain = url.split("/")[2]
-    if file_domain == request_domain:  # if url is cdn
+    if file_domain == request_domain:
         if request.status_code == 200:
             file_content = request.text
             file_name = file.split("/")[-1]
@@ -61,7 +58,7 @@ for file in css_files:
     request = session.get(file)
     file_domain = file.split("/")[2]
     request_domain = url.split("/")[2]
-    if file_domain == request_domain:  # if url is cdn do not replace
+    if file_domain == request_domain:
         if request.status_code == 200:
             file_content = request.text
             file_name = file.split("/")[-1]
@@ -71,8 +68,6 @@ for file in css_files:
                 f.close()
         else:
             print("Server error status code : ", request.status_code, "File : ", file)
-
-# Open HTML File
 
 f = open("./site_content/index.html", "a")
 f.write(str(soup))
