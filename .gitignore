@@ -1,2 +1,4 @@
 venv
 site_content
+.idea
+.DS_STORE
