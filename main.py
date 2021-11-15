@@ -4,12 +4,14 @@ from urllib.parse import urljoin
 import os.path
 from os import path
 from colorama import Fore
+import urllib.request
 
 print("Example Url : https://www.google.com")
 url = input("Enter site url  : ")
 
 session = requests.Session()
-session.headers["User-Agent"] = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (HTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36"
+session.headers[
+    "User-Agent"] = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (HTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36"
 html = session.get(url).content
 soup = bs(html, "html.parser")
 
@@ -27,6 +29,13 @@ for css in soup.find_all("link"):
         css_files.append(css_url)
         css['href'] = "assets/css/" + css_url.split("/")[-1]
 
+image_files = []
+for image in soup.find_all("img"):
+    if image.attrs.get("src"):
+        image_url = urljoin(url, image.attrs.get("src"))
+        image_files.append(image_url)
+        image['href'] = "assets/images/" + image_url.split("/")[-1]
+
 if not path.exists("site_content"):
     os.mkdir("site_content")
 
@@ -35,6 +44,9 @@ if not path.exists("site_content/assets"):
 
 if not path.exists("site_content/assets/js"):
     os.mkdir("site_content/assets/js")
+
+if not path.exists("site_content/assets/images"):
+    os.mkdir("site_content/assets/images")
 
 if not path.exists("site_content/assets/css"):
     os.mkdir("site_content/assets/css")
@@ -71,6 +83,10 @@ for file in css_files:
         else:
             print("Server error status code : ", request.status_code, "File : ", file)
 
+for file in image_files:
+    file_name = file.split("/")[-1]
+    urllib.request.urlretrieve(file, "./site_content/assets/images/" + file_name)
+
 f = open("./site_content/index.html", "a")
 f.write(str(soup))
 f.close()
@@ -79,3 +95,4 @@ print(Fore.GREEN + "Site exported successfully")
 print("HTML File : site_content/index.html")
 print("Js Assets : site_content/assets/js")
 print("Css Assets : site_content/assets/css")
+print("Image Assets : site_content/assets/images")
