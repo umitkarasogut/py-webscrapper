@@ -34,7 +34,7 @@ for image in soup.find_all("img"):
     if image.attrs.get("src"):
         image_url = urljoin(url, image.attrs.get("src"))
         image_files.append(image_url)
-        image['href'] = "assets/images/" + image_url.split("/")[-1]
+        image['src'] = "assets/images/" + image_url.split("/")[-1]
 
 if not path.exists("site_content"):
     os.mkdir("site_content")
